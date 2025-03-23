@@ -3,10 +3,11 @@ import buildPlugins from "./buildPlugins";
 import buildLoaders from "./buildLoaders";
 import buildResolvers from "./buildResolvers";
 import {BuildOptions} from "./types/config";
+import buildDevServer from "./buildDevServer";
 
 function buildWebpackConfig(options: BuildOptions): webpack.Configuration {
 
-    const { mode, paths } = options;
+    const { mode, paths, isDev } = options;
 
     return {
         mode: mode,  // Set Webpack mode to 'development' (faster builds, no minification)
@@ -26,6 +27,9 @@ function buildWebpackConfig(options: BuildOptions): webpack.Configuration {
         },
 
         resolve: buildResolvers(),
+
+        devtool: isDev ? 'inline-source-map' : undefined, // enable source map in built js file only while development
+        devServer: isDev ? buildDevServer(options) : undefined // start dev server only while development
     }
 }
 
